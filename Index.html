@@ -1,0 +1,42 @@
+<iframe id="googleMapFrame" width="100%" height="400" frameborder="0"
+        style="border:0; display: none;"
+        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+</iframe>
+
+<p id="noLocationMessage" style="text-align: center; font-size: 18px; font-weight: bold;">
+    🌍 Kan geen locatie ophalen... Zorg ervoor dat locatie is ingeschakeld.
+</p>
+
+<script>
+const GOOGLE_MAPS_API_KEY = "AIzaSyDzzLv55i17UMMJb9rP1tUmvrhw4z4eU9c"; // Vervang met je eigen API-sleutel!
+
+function showGoogleMaps(lat, lon) {
+    const mapUrl = `https://www.google.com/maps/embed/v1/place?key=${GOOGLE_MAPS_API_KEY}&q=${lat},${lon}`;
+    document.getElementById("googleMapFrame").src = mapUrl;
+    document.getElementById("googleMapFrame").style.display = "block"; // Toon de kaart
+    document.getElementById("noLocationMessage").style.display = "none"; // Verberg de melding
+}
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                console.log("Locatie gevonden:", lat, lon);
+                showGoogleMaps(lat, lon);
+            },
+            (error) => {
+                console.error("Fout bij ophalen locatie:", error);
+                document.getElementById("noLocationMessage").textContent = "🌍 Locatie niet beschikbaar. Controleer je instellingen.";
+            }
+        );
+    } else {
+        console.warn("Geolocatie niet ondersteund door browser.");
+        document.getElementById("noLocationMessage").textContent = "🌍 Jouw browser ondersteunt geen geolocatie.";
+    }
+}
+
+// Probeer de locatie op te halen
+getLocation();
+</script>
