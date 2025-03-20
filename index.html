@@ -14,24 +14,36 @@
 </head>
 <body>
 
-    <h2>📍 Live GPS Locatie</h2>
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // 🔹 Traccar API Configuratie
-        const TRACCAR_SERVER = "http://45.55.84.20:8082"; // Vervang met jouw Traccar-server
-        const TRACCAR_USERNAME = "Reclameappie@gmail.com"; // Vervang met jouw gebruikersnaam
-        const TRACCAR_PASSWORD = "xy3s9e6k"; // Vervang met jouw wachtwoord
-        const DEVICE_ID = 441821; // Vervang met het juiste device ID
+        const TRACCAR_SERVER = "http://jouw-traccar-server:8082"; // Vervang met jouw Traccar-server
+        const TRACCAR_USERNAME = "admin"; // Vervang met jouw gebruikersnaam
+        const TRACCAR_PASSWORD = "admin"; // Vervang met jouw wachtwoord
+        const DEVICE_ID = 1; // Vervang met het juiste device ID
 
         // 🔹 Basis-authenticatie maken
         const authHeader = "Basic " + btoa(TRACCAR_USERNAME + ":" + TRACCAR_PASSWORD);
 
-        // 🔹 Kaart initialiseren met Leaflet.js
-        let map = L.map('map').setView([52.370216, 4.895168], 15); // Amsterdam als startpositie
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
-        let marker = L.marker([52.370216, 4.895168]).addTo(map); // Dummy marker
+        // 🔹 Kaart initialiseren met Leaflet.js (zonder teveel labels)
+        let map = L.map('map', { zoomControl: false }).setView([52.370216, 4.895168], 15);
+        L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+            attribution: '',
+            subdomains: 'abcd',
+            minZoom: 2,
+            maxZoom: 19
+        }).addTo(map);
+
+        // 🔹 Auto-icoon (in plaats van standaard marker)
+        const carIcon = L.icon({
+            iconUrl: "https://cdn-icons-png.flaticon.com/512/1835/1835537.png", // Auto-icoon
+            iconSize: [40, 40], // Grootte aanpassen
+            iconAnchor: [20, 20] // Centered position
+        });
+
+        let marker = L.marker([52.370216, 4.895168], { icon: carIcon }).addTo(map);
 
         // 🔹 Functie om GPS-locatie van Traccar op te halen
         async function fetchGPSLocation() {
@@ -71,6 +83,6 @@
         fetchGPSLocation();
         setInterval(fetchGPSLocation, 10000);
     </script>
-//Change
+
 </body>
 </html>
